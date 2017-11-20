@@ -1,6 +1,6 @@
 """
-params={"filters":{json.dumps("<header_name or header_number>": "<filter>_<value>")},
-		"header_filters":{json.dumps(<"include" or "exclude">: [<header_name or header number>, <header_name or header_number>]})}
+params={"filters":{json.dumps("<nombre_cabezal o numero_cabezal>": "<filtro>_<valor>")},
+		"header_filters":{json.dumps(<"Include" o "Exclude">: [<nombre_cabezal or numero_cabezal>, <nombre_cabezal or numero_cabezal>]})}
 	
 """
 
@@ -36,12 +36,12 @@ def validate_header_filters(spread_values, header_filters):
 		return numeric_filters
 
 	filter_type = ''
-	if "include" in header_filters and "exclude" in header_filters:
+	if "Include" in header_filters and "Exclude" in header_filters:
 		return None 
-	elif "include" in header_filters:
-		filter_type = "include"
-	elif "exclude" in header_filters:
-		filter_type = "exclude"
+	elif "Include" in header_filters:
+		filter_type = "Include"
+	elif "Exclude" in header_filters:
+		filter_type = "Exclude"
 	else:
 		return None	
 	
@@ -62,11 +62,11 @@ def filter_headers(spread_values, header_filters):
 		for row in spread_values:
 			new_row = []
 			for x in range(len(row)):
-				if "include" in valid_filters:
-					if x in valid_filters["include"]:
+				if "Include" in valid_filters:
+					if x in valid_filters["Include"]:
 						new_row.append(row[x])
-				elif "exclude" in valid_filters:
-					if not x in valid_filters["exclude"]:
+				elif "Exclude" in valid_filters:
+					if not x in valid_filters["Exclude"]:
 						new_row.append(row[x])
 			new_spread.append(new_row)
 		return new_spread 	

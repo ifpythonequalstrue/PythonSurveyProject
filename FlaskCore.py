@@ -76,10 +76,10 @@ def header_params_check(args, valid_services):
 			params_from_json = json.loads(args["header_filters"])
 			if len(params_from_json) == 1:
 				filter_type = ''
-				if "include" in params_from_json:
-					filter_type = "include"
-				elif "exclude" in params_from_json:
-					filter_type = "exclude"
+				if "Include" in params_from_json:
+					filter_type = "Include"
+				elif "Exclude" in params_from_json:
+					filter_type = "Exclude"
 				else:
 					return []
 				for value in params_from_json[filter_type]:

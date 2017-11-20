@@ -37,18 +37,23 @@ El formato para utilizar uno de estos filtros es el siguiente (Ejemplo en forma 
 
 Por defecto (basado en config.json) los filtros tienen los siguientes nombres:
 
+Numericos:
 * Equals 
 * MoreThan 
 * LessThan 
 * MoreOrEquals 
 * LessOrEquals
 
+Para Strings:
 * StartsWith 
 * EndsWith 
 * Find 
 * FindMatchCase
 * In
 * InMatchCase
+
+Los filtros numericos solo se pueden utilizar para numeros enteros y floats.
+Los filtros para strings tambien pueden ser usados para valores numericos, pero Find Y FindMatchCase funcionan igual que Equals.
 
 
 Ejemplo en Python:
@@ -63,7 +68,7 @@ r = requests.get("http://127.0.0.1:5000/microdatos", params=({"filters": json.du
 ```
 
 El resultado sera (Asumiendo que los parametros sean validos), un archivo csv el cual contiene los cabezales, y cualquier fila donde
-se cumpra que "Edad" sea mayor o igual a 10, y el cabezal 3 contenga valores igual o menor que 5.
+se cumpla que "Edad" sea mayor o igual a 10, y el cabezal 3 contenga valores igual o menor que 5.
 
 
 ### Filtros para cabezales
@@ -73,7 +78,7 @@ Por el momento hay dos tipos de filtros para cabezales:
 * Include
 * Exclude
 
-Include permite indicar que cabezales se quiere que se devuelvan, ignorando el resto, Exclude realiza la operacion opuesta
+Include permite indicar que cabezales se quiere que se devuelvan, ignorando el resto, Exclude realiza la operacion opuesta.
 
 
 Ejemplo en Python:
@@ -82,7 +87,9 @@ Ejemplo en Python:
 import requests
 import json
 
-parametros = {"include": [1, 2, 3]}
+parametros = {"include": ["Nombre", "Edad", 3, 4]}
 
 r = requests.get("http://127.0.0.1:5000/microdatos", params=({"header_filters": json.dumps(parametros)}))
 ```
+
+El resultado sera que el archivo csv solo contenga los primeros 4 cabezales (En el caso de el ejemplo, Nombre y Edad son 2 de ellos).
