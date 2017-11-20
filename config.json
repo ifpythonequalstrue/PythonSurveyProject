@@ -1,0 +1,69 @@
+{
+	"pymongo_uri": "mongodb://admin:fudge@cluster0-shard-00-00-temaq.mongodb.net:27017,cluster0-shard-00-01-temaq.mongodb.net:27017,cluster0-shard-00-02-temaq.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin",
+	
+	"users": [{"username": "admin", "password": "secret", "role": "admin"}, 
+			  {"username": "guest", "password": "guest", "role": "guest"}],
+	
+	"roles": {"admin": 
+				{"services": 
+					["/", "/microdatos", "/datos_agregados"]} , 
+			  "guest": 
+				{"services": 
+					["/"]}
+			 },
+	
+	"google_sheet": "1A4g5JmFQcxnWztV5YmJNqNlnUSm5PIeHYuuCoo4neRI",
+
+	"regular_filters": [
+	
+		{"number_filters": 
+			["Equals", 
+			 "MoreThan", 
+			 "LessThan", 
+			 "MoreOrEquals", 
+			 "LessOrEquals"], 
+			 
+		"string_filters": 
+			["StartsWith", 
+			 "EndsWith", 
+			 "Find", 
+			 "FindMatchCase",
+			 "In",
+			 "InMatchCase"]
+		}],
+			 
+	"microdata_services": ["Equals", 
+						   "MoreThan", 
+						   "LessThan", 
+						   "MoreOrEquals", 
+						   "LessOrEquals", 
+						   "StartsWith", 
+						   "EndsWith", 
+						   "Find", 
+						   "FindMatchCase",
+						   "In",
+						   "InMatchCase",
+						   "Exclude",
+						   "Include"],
+						   
+	"sentiment_data": {"version": "2017-02-27",
+					   "username": "178002d5-9305-40a8-aee1-82dd7e1e75dd",
+					   "password": "NssduiOVzbbe"},
+	
+	"aggregate_data": {"filters": 
+	
+							["Edad", 
+							 "Género", 
+							 "Máximo nivel educativo alcanzado (completo)", 
+							 "¿Sabe algo acerca del programa \"Jóvenes a Programar\" de Plan Ceibal?",
+							 "Si conoce del programa \"Jóvenes a Programar\", ¿qué opinión tiene acerca del mismo?"],
+							 
+					   "sentiment": 
+					   
+							["Si conoce del programa \"Jóvenes a Programar\", ¿qué opinión tiene acerca del mismo?"],
+							
+					   "aggregation":
+					   
+							{"Edad": ["cantidad", "porcentaje"],
+							 "Género": ["cantidad", "porcentaje"],
+							 "Máximo nivel educativo alcanzado (completo)": ["cantidad", "porcentaje"]}}}
