@@ -92,4 +92,4 @@ parametros = {"include": ["Nombre", "Edad", 3, 4]}
 r = requests.get("http://127.0.0.1:5000/microdatos", params=({"header_filters": json.dumps(parametros)}))
 ```
 
-El resultado sera que el archivo csv solo contenga los primeros 4 cabezales (En el caso de el ejemplo, Nombre y Edad son 2 de ellos).
+El resultado sera que el archivo csv solo contenga los primeros 4 cabezales (En el caso de el ejemplo, Nombre y Edad son 2 de ellos) y las demas filas las cuales contienen los valores correspondientes a los cabezales.
