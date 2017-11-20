@@ -8,10 +8,10 @@ Instrucciones para utilizar esta applicacion.
 
 ### Requerimientos
 
-* [Python 3] (https://www.python.org/downloads/release/python-363/)
-* [Flask] (https://github.com/pallets/flask)
-* [Gspread] (https://github.com/burnash/gspread/) 
-* [Watson] (https://github.com/watson-developer-cloud/python-sdk)
+* [Python 3](https://www.python.org/downloads/release/python-363/)
+* [Flask](https://github.com/pallets/flask)
+* [Gspread](https://github.com/burnash/gspread/) 
+* [Watson](https://github.com/watson-developer-cloud/python-sdk)
 
 ### Instrucciones para utilizar esta applicacion
 
