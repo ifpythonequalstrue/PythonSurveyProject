@@ -99,7 +99,7 @@ app = Flask(__name__)
 
 @app.after_request
 def app_after_request(response):
-	MongoCore.insert_document(request, response)
+	#MongoCore.insert_document(request, response)
 	return response
 
 @app.route('/')
@@ -126,9 +126,32 @@ def app_microdatos():
 		return(Response("One or more of the filters are invalid", 400))
 		
 	response = make_response(microdata)
-	response.headers["content-type"] = "text/plain"
+	#response.headers["content-type"] = "text/plain; charset=utf-8"
+	response.headers["content-Disposition"] = "attachment; filename=microdatos.csv"
+	response.headers["content-type"] = "text/csv; charset=utf-8"
 	return response
 
+@app.route('/microdatos-console')
+@requires_auth
+@requires_role
+def app_microdatos_console():
+	parameters = None
+	
+	if len(request.args) > 0:
+		with open("config.json", encoding="UTF-8") as file:
+			microdata_services = json.load(file)['microdata_services']
+
+		parameters = header_params_check(request.args, microdata_services)
+		if len(parameters) == 0:	# invalid parameters
+			return(Response("Invalid parameters", 400))
+			
+	microdata = GoogleSheetsCore.return_all_values_csv(parameters)
+	if microdata == None:
+		return(Response("One or more of the filters are invalid", 400))
+		
+	response = make_response(microdata)
+	response.headers["content-type"] = "text/plain; charset=utf-8"
+	return response
 
 @app.route("/datos_agregados")
 @requires_auth
@@ -138,6 +161,7 @@ def app_aggregate_data():
 	sentiment = SentimentScript.aggregate_run_from_config()
 	result = {"aggregation": aggregation, "sentiment": sentiment}
 	response = make_response(json.dumps(result, ensure_ascii=False).encode("utf8"))
+	response.headers["content-type"] = "application/json"
 	return response
 	
 

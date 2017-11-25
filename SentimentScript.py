@@ -21,8 +21,10 @@ def validate_sentiment(params):
 
 	column_list = []
 	for row in all_values:
-		column_list.append(row[column])
-			
+		try:
+			column_list.append(row[column])
+		except:
+			pass
 	return [column_list, headers[column]]
 
 def sentiment(params):
@@ -41,8 +43,8 @@ def sentiment(params):
 		for string in column_list:
 			if len(string) >= 25:
 				try:
-					response = natural_language_understanding.analyze(text=string, 
-																	  features=Features(sentiment=SentimentOptions()))
+					response = natural_language_understanding.analyze(text=string, features=Features(sentiment=SentimentOptions()))
+
 					if response["sentiment"]["document"]["label"] == "positive":
 						sentiment_data["positivo"] += 1
 					elif response["sentiment"]["document"]["label"] == "negative":
@@ -51,6 +53,8 @@ def sentiment(params):
 						sentiment_data["neutral"] += 1
 				except:
 					pass
+					
+		cache_sentiment_data({header: sentiment_data})
 		return {header: sentiment_data}
 		
 	else:
@@ -59,4 +63,40 @@ def sentiment(params):
 def aggregate_run_from_config():
 	with open("config.json", encoding="UTF-8") as file:
 		params = json.load(file)["aggregate_data"]["sentiment"][0]
-	return sentiment({"sentiment": params})
+		
+	if check_cache_data():
+		return load_sentiment_data()["sentiment_data"]
+		
+	else:
+		return sentiment({"sentiment": params})
+
+def load_sentiment_data():
+	try:
+		with open("sentiment_data.json", encoding="UTF-8") as file:
+			json_data = json.load(file)
+		return json_data
+		
+	except FileNotFoundError:
+		json_data = {}
+		
+		with open("sentiment_data.json", "w", encoding="UTF-8") as file:
+			json_data["spreadsheet_length"] = 0
+			json_data["sentiment_data"] = ""
+			json.dump(json_data, file, ensure_ascii=False)
+			
+		return load_sentiment_data()
+
+def cache_sentiment_data(sentiment_data):
+	json_data = {}	
+	all_values = GoogleSheetsCore.return_all_values()
+	headers = all_values.pop(0)
+	
+	with open("sentiment_data.json", "w", encoding="UTF-8") as file:
+		json_data["spreadsheet_length"] = len(all_values)
+		json_data["sentiment_data"] = sentiment_data
+		json.dump(json_data, file, ensure_ascii=False)
+		
+def check_cache_data():
+	all_values = GoogleSheetsCore.return_all_values()
+	headers = all_values.pop(0)
+	return len(all_values) == load_sentiment_data()["spreadsheet_length"]

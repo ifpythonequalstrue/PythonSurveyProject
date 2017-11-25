@@ -46,11 +46,12 @@ def validate_header_filters(spread_values, header_filters):
 		return None	
 	
 	number_filters = translate_to_numeric()
+	
 	if number_filters != None:
 		header_filters[filter_type] = number_filters
 		for filter in header_filters[filter_type]:
-			if filter > len(header_filters[filter_type]):
-				return None	
+			if filter > len(spread_values[0]):
+				return None
 		return header_filters
 	else:
 		return None 
@@ -114,7 +115,6 @@ def validate_filters(spread_values, filters):
 					value = filters[filter]
 					new_filters[headers[int(filter) -1]] = value
 				else:
-					print(0)
 					raise InvalidFilter
 			else:
 				new_filters[filter] = filters[filter]
@@ -132,10 +132,8 @@ def validate_filters(spread_values, filters):
 														"filter": filter[0],
 														"value": convert_int_or_float(filter[1])})
 						else:
-							print(1)
 							raise InvalidFilter
 					else:
-						print(2)
 						raise InvalidFilter
 				elif filter[0] in regular_filters[0]["string_filters"]:
 					cleaned_up_filters.append({	"column": headers.index(filter_header), 
@@ -144,12 +142,10 @@ def validate_filters(spread_values, filters):
 				else:
 					raise InvalidFilter
 			else:
-				print(3)
 				raise InvalidFilter
 				
 		return filter_manager(spread_values, cleaned_up_filters)
 	except InvalidFilter:
-		print("Somehow invalid")
 		return None
 
 def filter_manager(spread_values, filters):

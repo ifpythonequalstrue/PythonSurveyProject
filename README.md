@@ -10,7 +10,7 @@ Instrucciones para utilizar esta applicacion.
 
 * [Python 3](https://www.python.org/downloads/release/python-363/)
 * [Flask](https://github.com/pallets/flask)
-* [Gspread](https://github.com/burnash/gspread/) 
+* [GoogleSheets API v4](https://developers.google.com/sheets/api/quickstart/python) 
 * [Watson](https://github.com/watson-developer-cloud/python-sdk)
 
 ### Instrucciones para utilizar esta applicacion

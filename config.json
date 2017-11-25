@@ -1,18 +1,20 @@
 {
-	"pymongo_uri": "<Mongo Uri>",
+	"pymongo_uri": "<Mongo_Uri>",
 	
 	"users": [{"username": "admin", "password": "secret", "role": "admin"}, 
 			  {"username": "guest", "password": "guest", "role": "guest"}],
 	
 	"roles": {"admin": 
 				{"services": 
-					["/", "/microdatos", "/datos_agregados"]} , 
+					["/", "/microdatos", "/microdatos-console", "/datos_agregados"]} , 
 			  "guest": 
 				{"services": 
 					["/"]}
 			 },
 	
-	"google_sheet": "<GoogleSheet Id>",
+	"spreadsheet_id": "<GoogleSheets_sheet_id>",
+	"spreadsheet_name": "<GoogleSheets_sheet_name>",
+	"spreadsheet_range": "!A:O",
 
 	"regular_filters": [
 	
@@ -66,4 +68,4 @@
 					   
 							{"Edad": ["cantidad", "porcentaje"],
 							 "Género": ["cantidad", "porcentaje"],
-							 "Máximo nivel educativo alcanzado (completo)": ["cantidad", "porcentaje"]}}}
+							 "Máximo nivel de educación alcanzado (completo)": ["cantidad", "porcentaje"]}}}
