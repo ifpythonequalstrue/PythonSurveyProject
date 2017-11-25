@@ -99,7 +99,7 @@ app = Flask(__name__)
 
 @app.after_request
 def app_after_request(response):
-	#MongoCore.insert_document(request, response)
+	MongoCore.insert_document(request, response)
 	return response
 
 @app.route('/')
