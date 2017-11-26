@@ -27,7 +27,7 @@ def validate_header_filters(spread_values, header_filters):
 					return None
 			else:
 				if int(filter) > 0:
-					if not int(filter) in numeric_filters: 
+					if not (int(filter) -1) in numeric_filters: 
 						numeric_filters.append(int(filter) -1)
 				else:
 					return None

@@ -74,6 +74,8 @@ def filter_headers(params, all_values):
 		if "header_filters" in params:
 			all_values = FilterCore.filter_headers(all_values, params["header_filters"])
 			return all_values
+		else:
+			return all_values
 	else:
 		return None
 		
