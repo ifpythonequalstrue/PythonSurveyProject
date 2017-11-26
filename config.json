@@ -6,7 +6,7 @@
 	
 	"roles": {"admin": 
 				{"services": 
-					["/", "/microdatos", "/microdatos-console", "/datos_agregados"]} , 
+					["/", "/microdatos", "/datos_agregados"]} , 
 			  "guest": 
 				{"services": 
 					["/"]}
