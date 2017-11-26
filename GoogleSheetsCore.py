@@ -78,5 +78,3 @@ def filter_headers(params, all_values):
 			return all_values
 	else:
 		return None
-		
-test = return_all_values()
