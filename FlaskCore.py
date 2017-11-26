@@ -126,7 +126,6 @@ def app_microdatos():
 		return(Response("One or more of the filters are invalid", 400))
 		
 	response = make_response(microdata)
-	#response.headers["content-type"] = "text/plain; charset=utf-8"
 	response.headers["content-Disposition"] = "attachment; filename=microdatos.csv"
 	response.headers["content-type"] = "text/csv; charset=utf-8"
 	return response
