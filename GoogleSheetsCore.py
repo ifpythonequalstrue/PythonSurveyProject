@@ -30,7 +30,7 @@ def get_credentials():
 		flow.user_agent = APPLICATION_NAME
 		if flags:
 			credentials = tools.run_flow(flow, store, flags)
-		else: # Needed only for compatibility with Python 2.6
+		else:
 			credentials = tools.run(flow, store)
 	return credentials
 
@@ -48,24 +48,37 @@ def return_all_values():
 		rangeName = spreadsheet_name + spreadsheet_range
 	result = service.spreadsheets().values().get(spreadsheetId=spreadsheetId, range=rangeName).execute()
 	values = result.get('values', [[]])
-	return list(values)
 	
-def return_all_values_csv(params=None):
-	all_values = return_all_values()
+	all_values = list(values)
+	headers = all_values[0]
+	answers = all_values[1:]
+
+	clean_list = [headers]
+	for value in answers:
+		if len(value) < len(headers):
+			missing_values = len(headers) - len(value)
+			for missing_element in range(1, missing_values + 1):
+				value.append('')
+		clean_list.append(value)
+	return clean_list
+	
+def return_all_values_csv(params=None, all_values=return_all_values()):
 	if params != None:
 		all_values = filter_headers(params, all_values)
 	if all_values == None:
-		return None
-	value_str = ''
-	for value in all_values:
-		for column in value:
-			if value[-1] != column:
-				value_str += column + ', '
+		return None #Filter was invalid
+
+	csv_string = ''
+	for spreadsheet_row in all_values:
+		for element_from_row in spreadsheet_row:
+			if spreadsheet_row[-1] != element_from_row:
+				csv_string += element_from_row + ','
 			else:
-				value_str += column
-		if all_values[-1] != value:
-			value_str += '\n'
-	return value_str
+				csv_string += element_from_row
+		if spreadsheet_row != all_values[-1]:
+			csv_string += "\n"
+			
+	return csv_string
 
 def filter_headers(params, all_values):
 	if "filters" in params:
@@ -77,4 +90,30 @@ def filter_headers(params, all_values):
 		else:
 			return all_values
 	else:
-		return None
+		return None #Filter was invalid
+		
+def return_all_values_as_list(params=None, all_values=None):
+	if all_values == None:
+		all_values = return_all_values()
+	
+	if params != None:
+		all_values = filter_headers(params, all_values)
+	if all_values == None:
+		return None	#Filter was invalid
+		
+	return all_values
+
+"""	
+import requests, re
+
+def return_spreadsheet_name():
+	with open("config.json", encoding="UTF-8") as file:
+		spreadsheetId = json.load(file)["spreadsheet_id"]
+		
+	url = "https://docs.google.com/spreadsheets/d/{}/".format(spreadsheetId)
+	r = requests.get(url)
+	text = str(r.text.split("\n")[0])
+	
+	regex = re.compile(r'content="\w+"')
+	return regex.findall(text)[0].split('"')[1]
+"""

@@ -1,9 +1,3 @@
-"""
-params={"filters":{json.dumps("<nombre_cabezal o numero_cabezal>": "<filtro>_<valor>")},
-		"header_filters":{json.dumps(<"Include" o "Exclude">: [<nombre_cabezal or numero_cabezal>, <nombre_cabezal or numero_cabezal>]})}
-	
-"""
-
 import json
 
 with open("config.json", encoding="UTF-8") as file:
@@ -90,21 +84,8 @@ def convert_int_or_float(value):
 		return int(value)
 	except:
 		return float(value)
-
-def translate_filters(diccionary):
-	new_diccionary = {}
-	for key, value in diccionary.items():
-		split_value = str(value).split("_")
-		keyword = split_value[0]
-		if len(split_value[1:]) == 1:
-			new_diccionary[key] = [keyword, split_value[1]]
-		else:
-			new_diccionary[key] = [keyword, "_".join(split_value[1:])]
-	return new_diccionary
 		
 def validate_filters(spread_values, filters):
-	new_diccionary = translate_filters(filters)
-	filters = new_diccionary
 	try:
 		headers = spread_values[0]
 		new_filters = {}
@@ -120,25 +101,33 @@ def validate_filters(spread_values, filters):
 				new_filters[filter] = filters[filter]
 				
 		filters = new_filters
-		first_values = spread_values[1]
+		non_headers = spread_values[1:]
 		cleaned_up_filters = []
 		
-		for filter_header, filter in filters.items():
-			if filter_header in headers:
-				if filter[0] in regular_filters[0]["number_filters"]:
-					if int_or_float(first_values[headers.index(filter_header)]):
-						if int_or_float(filter[1]):
-							cleaned_up_filters.append({	"column": headers.index(filter_header), 
-														"filter": filter[0],
-														"value": convert_int_or_float(filter[1])})
+		for header_to_filter, filter_to_apply in filters.items():
+			column = headers.index(header_to_filter)
+			if header_to_filter in headers:
+				if filter_to_apply[0] in regular_filters[0]["number_filters"]:
+					for row_number in range(len(non_headers) + 1): 
+						if row_number < len(non_headers):
+							if non_headers[row_number] != '':
+								if int_or_float(non_headers[row_number][column]):
+									if int_or_float(filter_to_apply[1]):
+										cleaned_up_filters.append({"column": column,
+																	"filter": filter_to_apply[0],
+																	"value": convert_int_or_float(filter_to_apply[1])})
+										break
+									else:
+										raise InvalidFilter #Value of filter to apply is not a number
+								else:
+									raise InvalidFilter #First value != '' in the column is not a number
 						else:
-							raise InvalidFilter
-					else:
-						raise InvalidFilter
-				elif filter[0] in regular_filters[0]["string_filters"]:
-					cleaned_up_filters.append({	"column": headers.index(filter_header), 
-												"filter": filter[0],
-												"value": filter[1]})
+							raise InvalidFilter #None of the values in the column are valid
+							
+				elif filter_to_apply[0] in regular_filters[0]["string_filters"]:
+					cleaned_up_filters.append({	"column": column, 
+												"filter": filter_to_apply[0],
+												"value": filter_to_apply[1]})
 				else:
 					raise InvalidFilter
 			else:
@@ -149,58 +138,55 @@ def validate_filters(spread_values, filters):
 		return None
 
 def filter_manager(spread_values, filters):
-	headers = spread_values.pop(0)
+	headers = spread_values[0]
 	for x in range(len(filters)):
-		spread_values = actual_filters(spread_values, filters[x])
-	spread_values.insert(0, headers)
+		spread_values = actual_filters(spread_values, filters[x], headers)
+		spread_values.insert(0, headers)
 	return spread_values
 		
-def actual_filters(spread_values, filters):
+def actual_filters(spread_values, filters, headers):
 	new_spread = []
 	for x in range(len(spread_values)):
-	
-		if filters["filter"] == regular_filters[0]["number_filters"][0]:				#Equals
-			if filters["value"] == convert_int_or_float(spread_values[x][filters["column"]]):
-				new_spread.append(spread_values[x])
-				
-		elif filters["filter"] == regular_filters[0]["number_filters"][1]:				#Less Than
-			if filters["value"] < convert_int_or_float(spread_values[x][filters["column"]]):
-				new_spread.append(spread_values[x])
-				
-		elif filters["filter"] == regular_filters[0]["number_filters"][2]:				#More Than
-			if filters["value"] > convert_int_or_float(spread_values[x][filters["column"]]):
-				new_spread.append(spread_values[x])
-				
-		elif filters["filter"] == regular_filters[0]["number_filters"][3]:				#Less or Equals
-			if filters["value"] <= convert_int_or_float(spread_values[x][filters["column"]]):
-				new_spread.append(spread_values[x])
-				
-		elif filters["filter"] == regular_filters[0]["number_filters"][4]:				#More or Equals
-			if filters["value"] >= convert_int_or_float(spread_values[x][filters["column"]]):
-				new_spread.append(spread_values[x])
-				
-		elif filters["filter"] == regular_filters[0]["string_filters"][0]:				#Starts With
-			if spread_values[x][filters["column"]].lower().startswith(filters["value"].lower()):
-				new_spread.append(spread_values[x])
-				
-		elif filters["filter"] == regular_filters[0]["string_filters"][1]:				#Ends With
-			if spread_values[x][filters["column"]].lower().endswith(filters["value"].lower()):
-				new_spread.append(spread_values[x])
-				
-		elif filters["filter"] == regular_filters[0]["string_filters"][2]:				#Find
-			if filters["value"].lower() == spread_values[x][filters["column"]].lower():
-				new_spread.append(spread_values[x])
-				
-		elif filters["filter"] == regular_filters[0]["string_filters"][3]:				#Find Match Case
-			if filters["value"] == spread_values[x][filters["column"]]:
-				new_spread.append(spread_values[x])
-				
-		elif filters["filter"] == regular_filters[0]["string_filters"][4]:				#In
-			if filters["value"].lower() in spread_values[x][filters["column"]].lower():
-				new_spread.append(spread_values[x])
-				
-		elif filters["filter"] == regular_filters[0]["string_filters"][5]:				#In Match Case
-			if filters["value"] in spread_values[x][filters["column"]]:
-				new_spread.append(spread_values[x])
+		if spread_values[x] != headers:
+			if filters["filter"] == regular_filters[0]["number_filters"][0]:				#Equals
+				if filters["value"] == convert_int_or_float(spread_values[x][filters["column"]]):
+					new_spread.append(spread_values[x])
+					
+			elif filters["filter"] == regular_filters[0]["number_filters"][1]:				#Less Than
+				if filters["value"] < convert_int_or_float(spread_values[x][filters["column"]]):
+					new_spread.append(spread_values[x])
+					
+			elif filters["filter"] == regular_filters[0]["number_filters"][2]:				#More Than
+				if filters["value"] > convert_int_or_float(spread_values[x][filters["column"]]):
+					new_spread.append(spread_values[x])
+					
+			elif filters["filter"] == regular_filters[0]["number_filters"][3]:				#Less or Equals
+				if filters["value"] <= convert_int_or_float(spread_values[x][filters["column"]]):
+					new_spread.append(spread_values[x])
+					
+			elif filters["filter"] == regular_filters[0]["number_filters"][4]:				#More or Equals
+				if filters["value"] >= convert_int_or_float(spread_values[x][filters["column"]]):
+					new_spread.append(spread_values[x])
+					
+			elif filters["filter"] == regular_filters[0]["string_filters"][0]:				#Starts With
+				if spread_values[x][filters["column"]].lower().startswith(filters["value"].lower()):
+					new_spread.append(spread_values[x])
+					
+			elif filters["filter"] == regular_filters[0]["string_filters"][1]:				#Ends With
+				if spread_values[x][filters["column"]].lower().endswith(filters["value"].lower()):
+					new_spread.append(spread_values[x])
+					
+			elif filters["filter"] == regular_filters[0]["string_filters"][2]:				#Exact
+				if filters["value"] == spread_values[x][filters["column"]]:
+					new_spread.append(spread_values[x])
+					
+			elif filters["filter"] == regular_filters[0]["string_filters"][3]:				#In
+				if filters["value"].lower() in spread_values[x][filters["column"]].lower():
+					new_spread.append(spread_values[x])
+					
+			elif filters["filter"] == regular_filters[0]["string_filters"][4]:				#In Match Case
+				if filters["value"] in spread_values[x][filters["column"]]:
+					new_spread.append(spread_values[x])
+
 	return new_spread
 

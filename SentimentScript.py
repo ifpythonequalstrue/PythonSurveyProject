@@ -3,8 +3,6 @@ import GoogleSheetsCore
 from watson_developer_cloud import NaturalLanguageUnderstandingV1
 from watson_developer_cloud.natural_language_understanding_v1 import Features, SentimentOptions
 
-
-# {"sentiment": "<Column_name or column_number>"}
 def validate_sentiment(params):
 	all_values = GoogleSheetsCore.return_all_values()
 	headers = all_values.pop(0)

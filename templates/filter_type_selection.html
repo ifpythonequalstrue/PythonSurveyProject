@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<head>
+<style>
+.button {
+	border: 2px solid black;
+	color: black
+	padding: 4px;
+	width: 250px;
+	height: 25px;
+	text-align: center;
+	font-size: 12;
+	cursor: pointer;
+	background-color; white;
+}
+
+.wrapper{
+	text-align: center;
+}
+
+.inner_wrapper{
+	text-align: left;
+	display: inline-block;
+}
+
+input {
+	font-family: arial, sans-serif;
+	font-weight: bold;
+}
+
+</style>
+</head>
+<body>
+	<!--in input, name -> send the name of the header, have the program check if valid and allow filtering-->
+	<h2 style="text-align:center">Seleccione el tipo de filtro que desea aplicar al cabezal {% if header %}"{{ header|safe }}"{% endif %}</h2>
+	<div class="wrapper">
+		<form action="/microdatos/parametros" method="post">
+			<input class="button" type="submit" name="filter" value="Filtro para contenido"/>
+			<input class="button" type="submit" name="header_filter" value="Filtro para cabezales"/>
+		</form>
+	</div>
+	<br><br>
+	
+	{% if filter %}
+		<div class="wrapper">
+			<form action="/microdatos/parametros/procesar" method="post">
+				Cual Filtro?:<br/>
+				<select name="filter" required>
+					{{ filter|safe }}
+				</select><br/><br/>
+				Valor para el Filtro:<br/><input name="value" type="text"><br/><br/>
+				<input type="submit" value="Filtrar Contenido" class="button" style="width:150px"/>
+			</form>
+		</div>
+	{% endif %}
+	
+	{% if header_filter %}
+		<div class="wrapper">
+			<form action="/microdatos/parametros/procesar" method="post">
+				Cual Filtro?:<br/>
+				{{ header_filter|safe }}
+				<input class="button" type="submit" value="Filtrar Cabezales" style="width:150px">
+			</form>
+		</div>
+	{% endif %}
+</body>

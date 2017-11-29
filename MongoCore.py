@@ -10,6 +10,7 @@ collection = db.flask_logs
 
 def insert_document(request, response):
 	service = str(request.url_rule)
+	method = request.method
 	date = str(datetime.now())
 	status_code = response.status_code
 	status = response.status[4:]
@@ -24,6 +25,7 @@ def insert_document(request, response):
 	collection.insert_one(
 		{
 			'servicio': service,
+			"metodo": method,
 			'fecha_invocacion': date,
 			'estado': {
 				'codigo': status_code,

@@ -32,7 +32,7 @@ La applicacion requiere que estos filtros esten en formato json.
 El formato para utilizar uno de estos filtros es el siguiente (Ejemplo en forma de un diccionario python):
 
 ```
-{"<Nombre de cabezal o numbero de cabeal>": "<Filtro>_<Valor para el filtro>"}
+{"<Nombre de cabezal o numbero de cabeal>": ["<Filtro>, <Valor para el filtro>"]}
 ```
 
 Por defecto (basado en config.json) los filtros tienen los siguientes nombres:
@@ -47,13 +47,12 @@ Numericos:
 Para Strings:
 * StartsWith 
 * EndsWith 
-* Find 
-* FindMatchCase
+* Exact
 * In
 * InMatchCase
 
 Los filtros numericos solo se pueden utilizar para numeros enteros y floats.
-Los filtros para strings tambien pueden ser usados para valores numericos, pero Find Y FindMatchCase funcionan igual que Equals.
+Los filtros para strings tambien pueden ser usados para valores numericos, pero Exact funciona igual que Equals.
 
 
 Ejemplo en Python:
@@ -62,7 +61,7 @@ Ejemplo en Python:
 import requests
 import json 
 
-parametros = {"Edad": "MoreOrEquals_10", 3: "LessOrEquals_5"}
+parametros = {"Edad": ["MoreOrEquals", 10], 3: ["LessOrEquals", 5]}
 
 r = requests.get("http://127.0.0.1:5000/microdatos", params=({"filters": json.dumps(parametros)})))
 ```

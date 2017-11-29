@@ -1,7 +1,6 @@
 import GoogleSheetsCore
 import json
 
-# {"aggregation": "<Column_name or column_number>"}
 def validate_aggregation(params):
 	all_values = GoogleSheetsCore.return_all_values()
 	headers = all_values.pop(0)

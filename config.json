@@ -1,20 +1,21 @@
 {
 	"pymongo_uri": "<Mongo_Uri>",
 	
-	"users": [{"username": "admin", "password": "secret", "role": "admin"}, 
-			  {"username": "guest", "password": "guest", "role": "guest"}],
+	"users": [{"username": "<username>", "password": "<password>", "role": "<role_name_1>"}, 
+			  {"username": "<username>", "password": "<password>", "role": "<role_name_2>"}],
 	
-	"roles": {"admin": 
+	"roles": {"<role_name_1>": 
 				{"services": 
-					["/", "/microdatos", "/datos_agregados"]} , 
-			  "guest": 
+					["/", "/microdatos", "/datos_agregados", "/microdatos_consola", "/microdatos/parametros", "/microdatos/parametros/procesar"]} ,  
+			  "<role_name_2>": 
 				{"services": 
 					["/"]}
 			 },
 	
 	"spreadsheet_id": "<GoogleSheets_sheet_id>",
 	"spreadsheet_name": "<GoogleSheets_sheet_name>",
-	"spreadsheet_range": "!A:O",
+	"spreadsheet_range": "!A:O"
+	"spreadsheet_main_name": "<GoogleSheets_sheet_main_name>",
 
 	"regular_filters": [
 	
@@ -28,8 +29,7 @@
 		"string_filters": 
 			["StartsWith", 
 			 "EndsWith", 
-			 "Find", 
-			 "FindMatchCase",
+			 "Exact", 
 			 "In",
 			 "InMatchCase"]
 		}],
@@ -41,8 +41,7 @@
 						   "LessOrEquals", 
 						   "StartsWith", 
 						   "EndsWith", 
-						   "Find", 
-						   "FindMatchCase",
+						   "Exact", 
 						   "In",
 						   "InMatchCase",
 						   "Exclude",
@@ -52,20 +51,12 @@
 					   "username": "<Watson Natural-Language-Understanding username credential>",
 					   "password": "<Watson Natural-Language-Understanding password credential>"},
 	
-	"aggregate_data": {"filters": 
-	
-							["Edad", 
-							 "Género", 
-							 "Máximo nivel educativo alcanzado (completo)", 
-							 "¿Sabe algo acerca del programa \"Jóvenes a Programar\" de Plan Ceibal?",
-							 "Si conoce del programa \"Jóvenes a Programar\", ¿qué opinión tiene acerca del mismo?"],
-							 
-					   "sentiment": 
+	"aggregate_data": { "sentiment": 
 					   
-							["Si conoce del programa \"Jóvenes a Programar\", ¿qué opinión tiene acerca del mismo?"],
+							["<Header>"],
 							
 					   "aggregation":
 					   
-							{"Edad": ["cantidad", "porcentaje"],
-							 "Género": ["cantidad", "porcentaje"],
-							 "Máximo nivel de educación alcanzado (completo)": ["cantidad", "porcentaje"]}}}
+							{"<Header>": ["cantidad", "porcentaje"],
+							 "<Header>": ["cantidad", "porcentaje"],
+							 "<Header>": ["cantidad", "porcentaje"]}}}
