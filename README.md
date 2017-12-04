@@ -32,7 +32,7 @@ La applicacion requiere que estos filtros esten en formato json.
 El formato para utilizar uno de estos filtros es el siguiente (Ejemplo en forma de un diccionario python):
 
 ```
-{"<Nombre de cabezal o numbero de cabeal>": ["<Filtro>, <Valor para el filtro>"]}
+{"<Nombre de cabezal o numbero de cabeal>": ["<Filtro>", "<Valor para el filtro>"]}
 ```
 
 Por defecto (basado en config.json) los filtros tienen los siguientes nombres:
