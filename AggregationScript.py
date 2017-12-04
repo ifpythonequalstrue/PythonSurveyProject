@@ -3,7 +3,7 @@ import json
 
 def validate_aggregation(params):
 	all_values = GoogleSheetsCore.return_all_values()
-	headers = all_values.pop(0)
+	headers = all_values[0]
 
 	if str(params["aggregation"]).isdigit():
 		if (int(params["aggregation"])-1 <= len(headers)) and int(params["aggregation"])-1 >= 0:
@@ -14,7 +14,7 @@ def validate_aggregation(params):
 	else:
 		return None
 		
-	return [column, all_values, headers[column]]
+	return [column, all_values[1:], headers[column]]
 		
 def aggregate_data(params, words=["amount", "percentage"]):
 	validate = validate_aggregation(params)
@@ -83,14 +83,12 @@ def load_aggregation_data():
 def cache_aggregation_data(aggregation_data):
 	json_data = {}
 	all_values = GoogleSheetsCore.return_all_values()
-	headers = all_values.pop(0)
 	
 	with open("aggregation_data.json", "w", encoding="UTF-8") as file:
-		json_data["spreadsheet_length"] = len(all_values)
+		json_data["spreadsheet_length"] = len(all_values)-1
 		json_data["aggregation_data"] = aggregation_data
 		json.dump(json_data, file, ensure_ascii=False)
 		
 def check_cache_data():
 	all_values = GoogleSheetsCore.return_all_values()
-	headers = all_values.pop(0)
-	return len(all_values) == load_aggregation_data()["spreadsheet_length"]
+	return len(all_values)-1 == load_aggregation_data()["spreadsheet_length"]

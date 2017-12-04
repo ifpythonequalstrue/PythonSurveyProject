@@ -189,4 +189,3 @@ def actual_filters(spread_values, filters, headers):
 					new_spread.append(spread_values[x])
 
 	return new_spread
-

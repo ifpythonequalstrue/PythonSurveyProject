@@ -5,7 +5,7 @@ from watson_developer_cloud.natural_language_understanding_v1 import Features, S
 
 def validate_sentiment(params):
 	all_values = GoogleSheetsCore.return_all_values()
-	headers = all_values.pop(0)
+	headers = all_values[0]
 	
 	if str(params["sentiment"]).isdigit():
 		if (int(params["sentiment"])-1 <= len(headers)) and int(params["sentiment"])-1 >= 0:
@@ -17,6 +17,8 @@ def validate_sentiment(params):
 	else:
 		return None
 
+	all_values = all_values[1:]
+	
 	column_list = []
 	for row in all_values:
 		try:
@@ -87,14 +89,12 @@ def load_sentiment_data():
 def cache_sentiment_data(sentiment_data):
 	json_data = {}	
 	all_values = GoogleSheetsCore.return_all_values()
-	headers = all_values.pop(0)
 	
 	with open("sentiment_data.json", "w", encoding="UTF-8") as file:
-		json_data["spreadsheet_length"] = len(all_values)
+		json_data["spreadsheet_length"] = len(all_values)-1
 		json_data["sentiment_data"] = sentiment_data
 		json.dump(json_data, file, ensure_ascii=False)
 		
 def check_cache_data():
 	all_values = GoogleSheetsCore.return_all_values()
-	headers = all_values.pop(0)
-	return len(all_values) == load_sentiment_data()["spreadsheet_length"]
+	return len(all_values)-1 == load_sentiment_data()["spreadsheet_length"]

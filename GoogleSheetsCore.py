@@ -102,18 +102,3 @@ def return_all_values_as_list(params=None, all_values=None):
 		return None	#Filter was invalid
 		
 	return all_values
-
-"""	
-import requests, re
-
-def return_spreadsheet_name():
-	with open("config.json", encoding="UTF-8") as file:
-		spreadsheetId = json.load(file)["spreadsheet_id"]
-		
-	url = "https://docs.google.com/spreadsheets/d/{}/".format(spreadsheetId)
-	r = requests.get(url)
-	text = str(r.text.split("\n")[0])
-	
-	regex = re.compile(r'content="\w+"')
-	return regex.findall(text)[0].split('"')[1]
-"""
